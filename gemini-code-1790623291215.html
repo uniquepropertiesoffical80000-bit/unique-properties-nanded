@@ -1,0 +1,1787 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNIQUE PROPERTIES – Purchase & Sale | Real Estate CRM & PWA</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        darkblue: '#0B132B',
+                        navy: '#1C2541',
+                        slate: '#3A506B',
+                        accentgold: '#D4AF37',
+                        goldhover: '#C5A028',
+                        lightgrey: '#F4F6F8'
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F4F6F8; color: #1C2541; }
+        h1, h2, h3, .font-heading { font-family: 'Playfair Display', serif; }
+        .glass { background: rgba(28, 37, 65, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+        .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(8px); border: 1px solid rgba(212, 175, 55, 0.2); }
+        /* Hide scrollbars for clean mobile look */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-accentgold selection:text-darkblue">
+
+    <!-- TOP NOTIFICATION / QUICK BAR -->
+    <div class="bg-darkblue text-white text-xs py-2 px-4 flex justify-between items-center border-b border-accentgold/30">
+        <div class="flex items-center space-x-4">
+            <span><i class="fas fa-map-marker-alt text-accentgold mr-1"></i> Degloor Naka, Nanded – 431604</span>
+            <span class="hidden md:inline"><i class="fas fa-phone-alt text-accentgold mr-1"></i> +91 7776000339</span>
+        </div>
+        <div class="flex items-center space-x-3">
+            <a href="https://instagram.com/unique_properties_nanded" target="_blank" class="hover:text-accentgold transition"><i class="fab fa-instagram"></i> unique_properties_nanded</a>
+            <button onclick="openAdminLogin()" class="bg-accentgold text-darkblue font-bold px-2 py-0.5 rounded text-[11px] hover:bg-goldhover transition">
+                <i class="fas fa-lock mr-1"></i> Admin Login
+            </button>
+        </div>
+    </div>
+
+    <!-- MAIN NAVBAR -->
+    <header class="sticky top-0 z-40 bg-darkblue/95 backdrop-blur-md shadow-xl border-b border-accentgold/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('home')">
+                    <div class="w-12 h-12 rounded-full bg-accentgold flex items-center justify-center text-darkblue font-bold text-2xl shadow-lg border-2 border-white/20 font-heading">
+                        UP
+                    </div>
+                    <div>
+                        <span class="text-xl sm:text-2xl font-bold font-heading text-white tracking-wide">UNIQUE <span class="text-accentgold">PROPERTIES</span></span>
+                        <p class="text-[10px] uppercase tracking-widest text-accentgold font-semibold">Purchase & Sale • Prop. Syed Abubakar Noman</p>
+                    </div>
+                </div>
+
+                <!-- Desktop Nav -->
+                <nav class="hidden lg:flex items-center space-x-6">
+                    <button onclick="switchTab('home')" class="nav-btn text-white hover:text-accentgold font-medium transition active-nav">Home</button>
+                    <button onclick="switchTab('about')" class="nav-btn text-white hover:text-accentgold font-medium transition">About Us</button>
+                    <button onclick="switchTab('services')" class="nav-btn text-white hover:text-accentgold font-medium transition">Services</button>
+                    <button onclick="switchTab('listings')" class="nav-btn text-white hover:text-accentgold font-medium transition">Listings</button>
+                    <button onclick="switchTab('contact')" class="nav-btn text-white hover:text-accentgold font-medium transition">Contact</button>
+                    <button onclick="checkAdminAccess()" class="bg-accentgold text-darkblue px-4 py-2 rounded-lg font-bold hover:bg-goldhover transition shadow-md flex items-center space-x-2">
+                        <i class="fas fa-tachometer-alt"></i><span>CRM Admin</span>
+                    </button>
+                </nav>
+
+                <!-- Mobile Menu Button -->
+                <div class="flex items-center lg:hidden space-x-2">
+                    <button onclick="checkAdminAccess()" class="bg-accentgold text-darkblue px-3 py-1.5 rounded text-sm font-bold">
+                        <i class="fas fa-lock"></i> CRM
+                    </button>
+                    <button id="menu-toggle" onclick="toggleMobileMenu()" class="text-white text-2xl p-2 focus:outline-none">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Nav Drawer -->
+        <div id="mobile-menu" class="hidden lg:hidden bg-navy border-t border-accentgold/20 px-4 pt-2 pb-6 space-y-2">
+            <button onclick="switchTab('home'); toggleMobileMenu();" class="block w-full text-left py-2 text-white hover:text-accentgold font-medium border-b border-slate/40">Home</button>
+            <button onclick="switchTab('about'); toggleMobileMenu();" class="block w-full text-left py-2 text-white hover:text-accentgold font-medium border-b border-slate/40">About Us</button>
+            <button onclick="switchTab('services'); toggleMobileMenu();" class="block w-full text-left py-2 text-white hover:text-accentgold font-medium border-b border-slate/40">Services</button>
+            <button onclick="switchTab('listings'); toggleMobileMenu();" class="block w-full text-left py-2 text-white hover:text-accentgold font-medium border-b border-slate/40">Property Listings</button>
+            <button onclick="switchTab('contact'); toggleMobileMenu();" class="block w-full text-left py-2 text-white hover:text-accentgold font-medium border-b border-slate/40">Contact Page</button>
+        </div>
+    </header>
+
+    <!-- CONTENT CONTAINER (DYNAMIC TABS) -->
+    <main class="flex-grow">
+
+        <!-- ================= 1. HOME PAGE ================= -->
+        <section id="tab-home" class="tab-content">
+            <!-- Hero Banner -->
+            <div class="relative bg-darkblue text-white overflow-hidden py-20 lg:py-32">
+                <div class="absolute inset-0 opacity-30 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&q=80&w=1600')"></div>
+                <div class="absolute inset-0 bg-gradient-to-r from-darkblue via-darkblue/90 to-transparent"></div>
+                <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="max-w-2xl">
+                        <span class="bg-accentgold/20 text-accentgold px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider border border-accentgold/30">Nanded's Most Trusted Real Estate Partner</span>
+                        <h1 class="text-4xl sm:text-6xl font-bold mt-4 mb-6 leading-tight font-heading">Find Your Dream Plot, House or Commercial Space</h1>
+                        <p class="text-gray-300 text-base sm:text-lg mb-8">Specializing in purchase, sale, rental, and marketing of commercial & residential plots, agricultural land, houses, flats, and shops in Nanded, Maharashtra.</p>
+                        <div class="flex flex-wrap gap-4">
+                            <button onclick="switchTab('listings')" class="bg-accentgold text-darkblue px-8 py-3.5 rounded-xl font-bold hover:bg-goldhover transition shadow-lg flex items-center space-x-2">
+                                <i class="fas fa-building"></i><span>Explore Properties</span>
+                            </button>
+                            <a href="https://wa.me/917776000339?text=Hello%20Unique%20Properties,%20I%20am%20interested%20in%20your%20real%20estate%20listings." target="_blank" class="bg-green-600 text-white px-8 py-3.5 rounded-xl font-bold hover:bg-green-700 transition shadow-lg flex items-center space-x-2">
+                                <i class="fab fa-whatsapp text-xl"></i><span>WhatsApp Inquiry</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Search Widget -->
+            <div class="max-w-6xl mx-auto px-4 -mt-10 relative z-20">
+                <div class="bg-white rounded-2xl shadow-2xl p-6 border border-accentgold/30 grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate mb-1">Property Type</label>
+                        <select id="search-type" class="w-full bg-lightgrey border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-accentgold">
+                            <option value="">All Types</option>
+                            <option value="Residential Plot">Residential Plot</option>
+                            <option value="Commercial Plot">Commercial Plot</option>
+                            <option value="House / Villa">House / Villa</option>
+                            <option value="Flat / Apartment">Flat / Apartment</option>
+                            <option value="Agricultural Land">Agricultural Land</option>
+                            <option value="Shop / Commercial">Shop / Commercial</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate mb-1">Location in Nanded</label>
+                        <input type="text" id="search-location" placeholder="e.g. Degloor Naka, CIDCO" class="w-full bg-lightgrey border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-accentgold">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate mb-1">Max Budget (₹)</label>
+                        <input type="number" id="search-budget" placeholder="e.g. 5000000" class="w-full bg-lightgrey border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-accentgold">
+                    </div>
+                    <div class="flex items-end">
+                        <button onclick="filterListingsFromHome()" class="w-full bg-darkblue text-accentgold font-bold py-3.5 rounded-lg hover:bg-navy transition shadow">
+                            <i class="fas fa-search mr-2"></i> Search Properties
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Featured Properties Showcase -->
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                <div class="flex justify-between items-end mb-10">
+                    <div>
+                        <span class="text-accentgold font-bold uppercase tracking-wider text-sm">Exclusive Deals</span>
+                        <h2 class="text-3xl sm:text-4xl font-bold font-heading text-darkblue mt-1">Featured Available Properties</h2>
+                    </div>
+                    <button onclick="switchTab('listings')" class="hidden sm:flex items-center text-darkblue font-bold hover:text-accentgold transition">
+                        View All Listings <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+                <div id="home-featured-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Populated dynamically via JS -->
+                </div>
+            </div>
+
+            <!-- Why Choose Us -->
+            <div class="bg-navy text-white py-16">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center max-w-2xl mx-auto mb-12">
+                        <span class="text-accentgold font-bold uppercase tracking-wider text-sm">Excellence & Trust</span>
+                        <h2 class="text-3xl sm:text-4xl font-bold font-heading mt-1">Why Choose Unique Properties?</h2>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div class="glass p-8 rounded-2xl border border-accentgold/20 text-center">
+                            <div class="w-16 h-16 bg-accentgold/20 text-accentgold rounded-full flex items-center justify-center text-2xl mx-auto mb-4">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <h3 class="text-xl font-bold font-heading mb-2">100% Verified Titles</h3>
+                            <p class="text-gray-300 text-sm">All plots, houses, and land parcels have clear title deeds, proper registry paperwork, and legal verification.</p>
+                        </div>
+                        <div class="glass p-8 rounded-2xl border border-accentgold/20 text-center">
+                            <div class="w-16 h-16 bg-accentgold/20 text-accentgold rounded-full flex items-center justify-center text-2xl mx-auto mb-4">
+                                <i class="fas fa-handshake"></i>
+                            </div>
+                            <h3 class="text-xl font-bold font-heading mb-2">Transparent Dealings</h3>
+                            <p class="text-gray-300 text-sm">Direct owner interactions, zero hidden charges, transparent pricing per sq.ft, and complete purchase support.</p>
+                        </div>
+                        <div class="glass p-8 rounded-2xl border border-accentgold/20 text-center">
+                            <div class="w-16 h-16 bg-accentgold/20 text-accentgold rounded-full flex items-center justify-center text-2xl mx-auto mb-4">
+                                <i class="fas fa-map-marked-alt"></span></i>
+                            </div>
+                            <h3 class="text-xl font-bold font-heading mb-2">Prime Locations in Nanded</h3>
+                            <p class="text-gray-300 text-sm">Properties situated in high-growth corridors like Degloor Naka, Taroda, CIDCO, Airport Road, and Vasarni.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= 2. ABOUT US PAGE ================= -->
+        <section id="tab-about" class="tab-content hidden">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <span class="text-accentgold font-bold uppercase tracking-wider text-sm">Established Real Estate Firm</span>
+                        <h2 class="text-3xl sm:text-5xl font-bold font-heading text-darkblue mt-2 mb-6">About Unique Properties</h2>
+                        <p class="text-gray-700 leading-relaxed mb-4">
+                            <strong>UNIQUE PROPERTIES – Purchase & Sale</strong>, spearheaded by Prop. <strong>Syed Abubakar Noman</strong>, is Nanded’s premier real estate consultancy and property marketing firm. We bridge the gap between discerning property buyers and sellers with utmost professionalism and integrity.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed mb-6">
+                            Whether you are looking for residential plotting schemes, commercial plots for business expansion, agricultural land, ready-to-move houses, luxurious flats, or commercial shops, our deep expertise in the Nanded real estate market ensures you get the best deal.
+                        </p>
+                        <div class="grid grid-cols-2 gap-6 bg-white p-6 rounded-2xl shadow border border-gray-200">
+                            <div>
+                                <h4 class="text-3xl font-bold text-darkblue font-heading">500+</h4>
+                                <p class="text-sm text-gray-500">Satisfied Clients</p>
+                            </div>
+                            <div>
+                                <h4 class="text-3xl font-bold text-accentgold font-heading">100%</h4>
+                                <p class="text-sm text-gray-500">Verified Legal Titles</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="relative">
+                        <div class="absolute -inset-2 bg-gradient-to-r from-accentgold to-darkblue rounded-3xl blur opacity-30"></div>
+                        <div class="relative bg-darkblue text-white p-8 rounded-3xl shadow-2xl">
+                            <div class="w-20 h-20 bg-accentgold text-darkblue rounded-2xl flex items-center justify-center text-3xl font-bold mb-6 font-heading">
+                                SAN
+                            </div>
+                            <h3 class="text-2xl font-bold font-heading mb-1">Syed Abubakar Noman</h3>
+                            <p class="text-accentgold text-sm font-semibold mb-6">Proprietor & Principal Consultant</p>
+                            <p class="text-gray-300 text-sm leading-relaxed mb-6">
+                                "Our mission is to make real estate acquisition and sales transparent, reliable, and profitable for every family and investor in Nanded."
+                            </p>
+                            <div class="border-t border-white/10 pt-4 space-y-2 text-sm text-gray-300">
+                                <p><i class="fas fa-map-marker-alt text-accentgold mr-2"></i> Degloor Naka, Nanded, Maharashtra – 431604</p>
+                                <p><i class="fas fa-phone-alt text-accentgold mr-2"></i> +91 7776000339 / 9011146695</p>
+                                <p><i class="fab fa-instagram text-accentgold mr-2"></i> unique_properties_nanded</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= 3. SERVICES PAGE ================= -->
+        <section id="tab-services" class="tab-content hidden">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                <div class="text-center max-w-2xl mx-auto mb-16">
+                    <span class="text-accentgold font-bold uppercase tracking-wider text-sm">Comprehensive Solutions</span>
+                    <h2 class="text-3xl sm:text-5xl font-bold font-heading text-darkblue mt-2">Our Real Estate Services</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="bg-white p-8 rounded-2xl shadow-lg border border-gray-100 hover:border-accentgold transition">
+                        <div class="w-14 h-14 bg-darkblue text-accentgold rounded-xl flex items-center justify-center text-2xl mb-6 shadow">
+                            <i class="fas fa-city"></i>
+                        </div>
+                        <h3 class="text-xl font-bold font-heading mb-3 text-darkblue">Residential & Commercial Plots</h3>
+                        <p class="text-gray-600 text-sm leading-relaxed">Purchase and sale of approved plotting layouts, gated community plots, and commercial land parcels with clear documentation.</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-2xl shadow-lg border border-gray-100 hover:border-accentgold transition">
+                        <div class="w-14 h-14 bg-darkblue text-accentgold rounded-xl flex items-center justify-center text-2xl mb-6 shadow">
+                            <i class="fas fa-home"></i>
+                        </div>
+                        <h3 class="text-xl font-bold font-heading mb-3 text-darkblue">Houses, Villas & Flats</h3>
+                        <p class="text-gray-600 text-sm leading-relaxed">Independent houses, duplexes, luxury apartments, and ready-to-move-in residential units across prime localities in Nanded.</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-2xl shadow-lg border border-gray-100 hover:border-accentgold transition">
+                        <div class="w-14 h-14 bg-darkblue text-accentgold rounded-xl flex items-center justify-center text-2xl mb-6 shadow">
+                            <i class="fas fa-tractor"></i>
+                        </div>
+                        <h3 class="text-xl font-bold font-heading mb-3 text-darkblue">Agricultural Land</h3>
+                        <p class="text-gray-600 text-sm leading-relaxed">Farmland transactions, orchards, and rural property investments with complete title checks and registry assistance.</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-2xl shadow-lg border border-gray-100 hover:border-accentgold transition">
+                        <div class="w-14 h-14 bg-darkblue text-accentgold rounded-xl flex items-center justify-center text-2xl mb-6 shadow">
+                            <i class="fas fa-store"></i>
+                        </div>
+                        <h3 class="text-xl font-bold font-heading mb-3 text-darkblue">Shops & Commercial Spaces</h3>
+                        <p class="text-gray-600 text-sm leading-relaxed">High footfall commercial shops, showrooms, and office spaces for rent or outright purchase in commercial hubs.</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-2xl shadow-lg border border-gray-100 hover:border-accentgold transition">
+                        <div class="w-14 h-14 bg-darkblue text-accentgold rounded-xl flex items-center justify-center text-2xl mb-6 shadow">
+                            <i class="fas fa-bullhorn"></i>
+                        </div>
+                        <h3 class="text-xl font-bold font-heading mb-3 text-darkblue">Property Marketing</h3>
+                        <p class="text-gray-600 text-sm leading-relaxed">Aggressive digital marketing, video ad campaigns, and professional brokerage for fast property liquidation.</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-2xl shadow-lg border border-gray-100 hover:border-accentgold transition">
+                        <div class="w-14 h-14 bg-darkblue text-accentgold rounded-xl flex items-center justify-center text-2xl mb-6 shadow">
+                            <i class="fas fa-file-contract"></i>
+                        </div>
+                        <h3 class="text-xl font-bold font-heading mb-3 text-darkblue">Legal & Documentation</h3>
+                        <p class="text-gray-600 text-sm leading-relaxed">Assistance with sale deeds, title verification, registry paperwork, agreement drafting, and bank loan documentation.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= 4. PROPERTY LISTINGS (AVAILABLE & SOLD) ================= -->
+        <section id="tab-listings" class="tab-content hidden">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                <!-- Header & Filters -->
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+                    <div>
+                        <span class="text-accentgold font-bold uppercase tracking-wider text-sm">Browse Portfolio</span>
+                        <h2 class="text-3xl sm:text-4xl font-bold font-heading text-darkblue mt-1">Property Listings</h2>
+                    </div>
+                    <!-- Toggle Available / Sold -->
+                    <div class="flex bg-gray-200 p-1.5 rounded-xl">
+                        <button onclick="setListingSubTab('available')" id="subtab-avail-btn" class="px-6 py-2 rounded-lg font-bold text-sm bg-darkblue text-accentgold shadow transition">Available Properties</button>
+                        <button onclick="setListingSubTab('sold')" id="subtab-sold-btn" class="px-6 py-2 rounded-lg font-bold text-sm text-gray-700 hover:text-darkblue transition">Sold Properties</button>
+                    </div>
+                </div>
+
+                <!-- Search & Type Filter Bar -->
+                <div class="bg-white p-4 rounded-xl shadow mb-8 flex flex-col md:flex-row gap-4 items-center justify-between">
+                    <div class="flex-1 w-full relative">
+                        <i class="fas fa-search absolute left-4 top-3.5 text-gray-400"></i>
+                        <input type="text" id="listing-filter-input" oninput="renderPublicListings()" placeholder="Search by name, location, society, or plot number..." class="w-full pl-11 pr-4 py-3 bg-lightgrey rounded-lg text-sm border border-gray-200 focus:ring-2 focus:ring-accentgold">
+                    </div>
+                    <div class="w-full md:w-64">
+                        <select id="listing-type-filter" onchange="renderPublicListings()" class="w-full bg-lightgrey border border-gray-200 rounded-lg p-3 text-sm focus:ring-2 focus:ring-accentgold">
+                            <option value="">All Property Types</option>
+                            <option value="Residential Plot">Residential Plot</option>
+                            <option value="Commercial Plot">Commercial Plot</option>
+                            <option value="House / Villa">House / Villa</option>
+                            <option value="Flat / Apartment">Flat / Apartment</option>
+                            <option value="Agricultural Land">Agricultural Land</option>
+                            <option value="Shop / Commercial">Shop / Commercial</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Dynamic Listings Container -->
+                <div id="public-listings-container" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Populated via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= 5. CONTACT PAGE ================= -->
+        <section id="tab-contact" class="tab-content hidden">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                    <div>
+                        <span class="text-accentgold font-bold uppercase tracking-wider text-sm">Get in Touch</span>
+                        <h2 class="text-3xl sm:text-5xl font-bold font-heading text-darkblue mt-2 mb-6">Contact Unique Properties</h2>
+                        <p class="text-gray-700 mb-8 leading-relaxed">
+                            Have a property to sell or looking to buy your dream plot/house in Nanded? Reach out to us directly or visit our office for expert consultation.
+                        </p>
+                        
+                        <div class="space-y-6">
+                            <div class="flex items-start space-x-4 bg-white p-6 rounded-2xl shadow border border-gray-100">
+                                <div class="w-12 h-12 bg-accentgold/20 text-accentgold rounded-xl flex items-center justify-center text-xl shrink-0">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-darkblue font-heading">Office Address</h4>
+                                    <p class="text-sm text-gray-600 mt-1">Degloor Naka, Nanded, Maharashtra – 431604</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-4 bg-white p-6 rounded-2xl shadow border border-gray-100">
+                                <div class="w-12 h-12 bg-accentgold/20 text-accentgold rounded-xl flex items-center justify-center text-xl shrink-0">
+                                    <i class="fas fa-phone-alt"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-darkblue font-heading">Contact Numbers</h4>
+                                    <p class="text-sm text-gray-600 mt-1">+91 7776000339 / 9011146695</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-4 bg-white p-6 rounded-2xl shadow border border-gray-100">
+                                <div class="w-12 h-12 bg-accentgold/20 text-accentgold rounded-xl flex items-center justify-center text-xl shrink-0">
+                                    <i class="fab fa-whatsapp text-2xl text-green-600"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-darkblue font-heading">WhatsApp Support</h4>
+                                    <a href="https://wa.me/917776000339" target="_blank" class="text-sm text-green-600 font-bold hover:underline mt-1 inline-block">Chat instantly with Syed Abubakar Noman →</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contact / Inquiry Form -->
+                    <div class="bg-darkblue text-white p-8 sm:p-10 rounded-3xl shadow-2xl border border-accentgold/30">
+                        <h3 class="text-2xl font-bold font-heading mb-6">Send an Inquiry</h3>
+                        <form onsubmit="handleCustomerInquiry(event)" class="space-y-4">
+                            <div>
+                                <label class="block text-xs uppercase font-bold text-accentgold mb-1">Your Full Name</label>
+                                <input type="text" id="inquiry-name" required placeholder="Enter your name" class="w-full bg-navy border border-white/20 rounded-xl p-3 text-sm text-white focus:ring-2 focus:ring-accentgold">
+                            </div>
+                            <div>
+                                <label class="block text-xs uppercase font-bold text-accentgold mb-1">Contact Number</label>
+                                <input type="tel" id="inquiry-phone" required placeholder="Enter mobile number" class="w-full bg-navy border border-white/20 rounded-xl p-3 text-sm text-white focus:ring-2 focus:ring-accentgold">
+                            </div>
+                            <div>
+                                <label class="block text-xs uppercase font-bold text-accentgold mb-1">Looking For</label>
+                                <select id="inquiry-requirement" class="w-full bg-navy border border-white/20 rounded-xl p-3 text-sm text-white focus:ring-2 focus:ring-accentgold">
+                                    <option value="Residential Plot">Residential Plot</option>
+                                    <option value="Commercial Plot">Commercial Plot</option>
+                                    <option value="House / Villa">House / Villa</option>
+                                    <option value="Flat / Apartment">Flat / Apartment</option>
+                                    <option value="Agricultural Land">Agricultural Land</option>
+                                    <option value="Sell Property">I want to Sell a Property</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs uppercase font-bold text-accentgold mb-1">Message / Notes</label>
+                                <textarea id="inquiry-notes" rows="4" placeholder="Describe your budget or location preference..." class="w-full bg-navy border border-white/20 rounded-xl p-3 text-sm text-white focus:ring-2 focus:ring-accentgold"></textarea>
+                            </div>
+                            <button type="submit" class="w-full bg-accentgold text-darkblue font-bold py-3.5 rounded-xl hover:bg-goldhover transition shadow-lg">
+                                Submit Inquiry & Notify Admin
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Google Maps Embed -->
+                <div class="mt-16 bg-white p-4 rounded-3xl shadow-xl border border-gray-200">
+                    <div class="rounded-2xl overflow-hidden h-96 w-full">
+                        <iframe width="100%" height="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?q=Degloor+Naka,+Nanded,+Maharashtra+431604&t=&z=15&ie=UTF8&iwloc=&output=embed"></iframe>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= 6. ADMIN CRM DASHBOARD ================= -->
+        <section id="tab-admin" class="tab-content hidden">
+            <!-- Admin Top Bar -->
+            <div class="bg-navy text-white py-4 px-6 border-b border-accentgold/20 flex flex-wrap justify-between items-center gap-4">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-accentgold text-darkblue rounded-lg flex items-center justify-center font-bold text-lg font-heading">
+                        CRM
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold font-heading">Unique Properties Admin Console</h2>
+                        <p class="text-xs text-accentgold">Welcome back, Prop. Syed Abubakar Noman</p>
+                    </div>
+                </div>
+                <div class="flex flex-wrap items-center gap-3">
+                    <button onclick="backupDatabase()" class="bg-slate text-white px-3 py-2 rounded-lg text-xs font-bold hover:bg-slate/80 transition"><i class="fas fa-download mr-1"></i> Backup JSON</button>
+                    <label class="bg-slate text-white px-3 py-2 rounded-lg text-xs font-bold hover:bg-slate/80 transition cursor-pointer">
+                        <i class="fas fa-upload mr-1"></i> Restore <input type="file" onchange="restoreDatabase(event)" class="hidden">
+                    </label>
+                    <button onclick="logoutAdmin()" class="bg-red-600 text-white px-3 py-2 rounded-lg text-xs font-bold hover:bg-red-700 transition"><i class="fas fa-sign-out-alt mr-1"></i> Logout</button>
+                </div>
+            </div>
+
+            <!-- Admin Sub-Navigation Tabs -->
+            <div class="bg-darkblue text-white overflow-x-auto no-scrollbar shadow">
+                <div class="max-w-7xl mx-auto px-4 flex space-x-2 py-3">
+                    <button onclick="setAdminSubTab('dashboard')" id="admintab-dashboard-btn" class="admin-nav-btn px-4 py-2 rounded-lg text-sm font-bold bg-accentgold text-darkblue whitespace-nowrap"><i class="fas fa-chart-pie mr-2"></i>Dashboard</button>
+                    <button onclick="setAdminSubTab('available')" id="admintab-available-btn" class="admin-nav-btn px-4 py-2 rounded-lg text-sm font-bold text-gray-300 hover:text-white whitespace-nowrap"><i class="fas fa-building mr-2"></i>Available Properties</button>
+                    <button onclick="setAdminSubTab('sold')" id="admintab-sold-btn" class="admin-nav-btn px-4 py-2 rounded-lg text-sm font-bold text-gray-300 hover:text-white whitespace-nowrap"><i class="fas fa-handshake mr-2"></i>Sold Properties</button>
+                    <button onclick="setAdminSubTab('clients')" id="admintab-clients-btn" class="admin-nav-btn px-4 py-2 rounded-lg text-sm font-bold text-gray-300 hover:text-white whitespace-nowrap"><i class="fas fa-users mr-2"></i>Client Management</button>
+                    <button onclick="setAdminSubTab('payments')" id="admintab-payments-btn" class="admin-nav-btn px-4 py-2 rounded-lg text-sm font-bold text-gray-300 hover:text-white whitespace-nowrap"><i class="fas fa-rupee-sign mr-2"></i>Payment Tracking</button>
+                    <button onclick="setAdminSubTab('schedule')" id="admintab-schedule-btn" class="admin-nav-btn px-4 py-2 rounded-lg text-sm font-bold text-gray-300 hover:text-white whitespace-nowrap"><i class="fas fa-calendar-alt mr-2"></i>Daily Schedule</button>
+                </div>
+            </div>
+
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                
+                <!-- 6.1 ADMIN DASHBOARD OVERVIEW -->
+                <div id="admin-pane-dashboard" class="admin-pane space-y-8">
+                    <!-- Stat Cards -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div class="bg-white p-6 rounded-2xl shadow border-l-4 border-accentgold">
+                            <p class="text-xs font-bold uppercase text-gray-500">Available Properties</p>
+                            <h3 id="stat-avail-count" class="text-3xl font-bold text-darkblue font-heading mt-1">0</h3>
+                        </div>
+                        <div class="bg-white p-6 rounded-2xl shadow border-l-4 border-green-600">
+                            <p class="text-xs font-bold uppercase text-gray-500">Sold Properties</p>
+                            <h3 id="stat-sold-count" class="text-3xl font-bold text-darkblue font-heading mt-1">0</h3>
+                        </div>
+                        <div class="bg-white p-6 rounded-2xl shadow border-l-4 border-blue-600">
+                            <p class="text-xs font-bold uppercase text-gray-500">Total Clients</p>
+                            <h3 id="stat-client-count" class="text-3xl font-bold text-darkblue font-heading mt-1">0</h3>
+                        </div>
+                        <div class="bg-white p-6 rounded-2xl shadow border-l-4 border-purple-600">
+                            <p class="text-xs font-bold uppercase text-gray-500">Total Revenue / Sales</p>
+                            <h3 id="stat-revenue" class="text-2xl font-bold text-darkblue font-heading mt-1">₹0</h3>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions & Recent Reminders -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <div class="bg-white p-6 rounded-2xl shadow">
+                            <h3 class="text-lg font-bold font-heading text-darkblue mb-4 flex items-center justify-between">
+                                <span><i class="fas fa-bolt text-accentgold mr-2"></i>Quick CRM Actions</span>
+                            </h3>
+                            <div class="grid grid-cols-2 gap-4">
+                                <button onclick="setAdminSubTab('available'); openPropertyModal();" class="p-4 bg-lightgrey hover:bg-darkblue hover:text-white rounded-xl text-center font-bold text-sm transition border border-gray-200">
+                                    <i class="fas fa-plus-circle text-2xl text-accentgold mb-2 block"></i>Add New Property
+                                </button>
+                                <button onclick="setAdminSubTab('clients'); openClientModal();" class="p-4 bg-lightgrey hover:bg-darkblue hover:text-white rounded-xl text-center font-bold text-sm transition border border-gray-200">
+                                    <i class="fas fa-user-plus text-2xl text-accentgold mb-2 block"></i>Add New Client
+                                </button>
+                                <button onclick="setAdminSubTab('payments'); openPaymentModal();" class="p-4 bg-lightgrey hover:bg-darkblue hover:text-white rounded-xl text-center font-bold text-sm transition border border-gray-200">
+                                    <i class="fas fa-rupee-sign text-2xl text-accentgold mb-2 block"></i>Add Payment Entry
+                                </button>
+                                <button onclick="setAdminSubTab('schedule'); openScheduleModal();" class="p-4 bg-lightgrey hover:bg-darkblue hover:text-white rounded-xl text-center font-bold text-sm transition border border-gray-200">
+                                    <i class="fas fa-calendar-plus text-2xl text-accentgold mb-2 block"></i>Add Schedule / Task
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-2xl shadow">
+                            <h3 class="text-lg font-bold font-heading text-darkblue mb-4 flex items-center justify-between">
+                                <span><i class="fas fa-clock text-accentgold mr-2"></i>Upcoming Follow-ups & Tasks</span>
+                            </h3>
+                            <div id="admin-dash-schedule-list" class="space-y-3 max-h-60 overflow-y-auto pr-2">
+                                <!-- Populated via JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6.2 AVAILABLE PROPERTIES MANAGEMENT -->
+                <div id="admin-pane-available" class="admin-pane hidden space-y-6">
+                    <div class="flex justify-between items-center flex-wrap gap-4">
+                        <h3 class="text-2xl font-bold font-heading text-darkblue">Available Properties Management</h3>
+                        <div class="flex gap-3">
+                            <button onclick="exportTableToExcel('available-table', 'Available_Properties.xls')" class="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-green-700 transition"><i class="fas fa-file-excel mr-1"></i> Export Excel</button>
+                            <button onclick="openPropertyModal()" class="bg-accentgold text-darkblue px-5 py-2 rounded-lg font-bold text-sm hover:bg-goldhover transition shadow">
+                                <i class="fas fa-plus mr-1"></i> Add Property
+                            </button>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-2xl shadow overflow-x-auto border border-gray-200">
+                        <table id="available-table" class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-darkblue text-white text-xs uppercase tracking-wider">
+                                    <th class="p-4">Image</th>
+                                    <th class="p-4">Property / Society</th>
+                                    <th class="p-4">Location</th>
+                                    <th class="p-4">Type / Size</th>
+                                    <th class="p-4">Price</th>
+                                    <th class="p-4">Owner Info</th>
+                                    <th class="p-4">Status</th>
+                                    <th class="p-4 text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-available-tbody" class="divide-y divide-gray-200 text-sm">
+                                <!-- Populated via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 6.3 SOLD PROPERTIES MANAGEMENT -->
+                <div id="admin-pane-sold" class="admin-pane hidden space-y-6">
+                    <div class="flex justify-between items-center flex-wrap gap-4">
+                        <h3 class="text-2xl font-bold font-heading text-darkblue">Sold Properties Record</h3>
+                        <div class="flex gap-3">
+                            <button onclick="exportTableToExcel('sold-table', 'Sold_Properties.xls')" class="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-green-700 transition"><i class="fas fa-file-excel mr-1"></i> Export Excel</button>
+                            <button onclick="openSoldModal()" class="bg-accentgold text-darkblue px-5 py-2 rounded-lg font-bold text-sm hover:bg-goldhover transition shadow">
+                                <i class="fas fa-plus mr-1"></i> Record Sold Property
+                            </button>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-2xl shadow overflow-x-auto border border-gray-200">
+                        <table id="sold-table" class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-darkblue text-white text-xs uppercase tracking-wider">
+                                    <th class="p-4">Property Name</th>
+                                    <th class="p-4">Location / Plot</th>
+                                    <th class="p-4">Area</th>
+                                    <th class="p-4">Sold Price</th>
+                                    <th class="p-4">Buyer Details</th>
+                                    <th class="p-4">Registry Date</th>
+                                    <th class="p-4">Payment</th>
+                                    <th class="p-4 text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-sold-tbody" class="divide-y divide-gray-200 text-sm">
+                                <!-- Populated via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 6.4 CLIENT MANAGEMENT -->
+                <div id="admin-pane-clients" class="admin-pane hidden space-y-6">
+                    <div class="flex justify-between items-center flex-wrap gap-4">
+                        <h3 class="text-2xl font-bold font-heading text-darkblue">Client Leads & Requirements</h3>
+                        <div class="flex gap-3">
+                            <button onclick="exportTableToExcel('clients-table', 'Clients_Data.xls')" class="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-green-700 transition"><i class="fas fa-file-excel mr-1"></i> Export Excel</button>
+                            <button onclick="openClientModal()" class="bg-accentgold text-darkblue px-5 py-2 rounded-lg font-bold text-sm hover:bg-goldhover transition shadow">
+                                <i class="fas fa-user-plus mr-1"></i> Add Client Lead
+                            </button>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-2xl shadow overflow-x-auto border border-gray-200">
+                        <table id="clients-table" class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-darkblue text-white text-xs uppercase tracking-wider">
+                                    <th class="p-4">Client Name</th>
+                                    <th class="p-4">Contact</th>
+                                    <th class="p-4">Requirement</th>
+                                    <th class="p-4">Budget</th>
+                                    <th class="p-4">Preferred Area</th>
+                                    <th class="p-4">Follow-up Date</th>
+                                    <th class="p-4">Notes</th>
+                                    <th class="p-4 text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-clients-tbody" class="divide-y divide-gray-200 text-sm">
+                                <!-- Populated via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 6.5 PAYMENT TRACKING -->
+                <div id="admin-pane-payments" class="admin-pane hidden space-y-6">
+                    <div class="flex justify-between items-center flex-wrap gap-4">
+                        <h3 class="text-2xl font-bold font-heading text-darkblue">Payment & Ledger Tracking</h3>
+                        <div class="flex gap-3">
+                            <button onclick="exportTableToExcel('payments-table', 'Payment_Ledger.xls')" class="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-green-700 transition"><i class="fas fa-file-excel mr-1"></i> Export Excel</button>
+                            <button onclick="openPaymentModal()" class="bg-accentgold text-darkblue px-5 py-2 rounded-lg font-bold text-sm hover:bg-goldhover transition shadow">
+                                <i class="fas fa-plus mr-1"></i> Add Payment Entry
+                            </button>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-2xl shadow overflow-x-auto border border-gray-200">
+                        <table id="payments-table" class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-darkblue text-white text-xs uppercase tracking-wider">
+                                    <th class="p-4">Client / Property</th>
+                                    <th class="p-4">Total Amount</th>
+                                    <th class="p-4">Paid Amount</th>
+                                    <th class="p-4">Remaining</th>
+                                    <th class="p-4">Last Payment Date</th>
+                                    <th class="p-4">Due Date</th>
+                                    <th class="p-4 text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-payments-tbody" class="divide-y divide-gray-200 text-sm">
+                                <!-- Populated via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 6.6 DAILY SCHEDULE / TASKS -->
+                <div id="admin-pane-schedule" class="admin-pane hidden space-y-6">
+                    <div class="flex justify-between items-center flex-wrap gap-4">
+                        <h3 class="text-2xl font-bold font-heading text-darkblue">Daily Schedule, Visits & Reminders</h3>
+                        <button onclick="openScheduleModal()" class="bg-accentgold text-darkblue px-5 py-2 rounded-lg font-bold text-sm hover:bg-goldhover transition shadow">
+                            <i class="fas fa-calendar-plus mr-1"></i> Add Task / Reminder
+                        </button>
+                    </div>
+                    <div class="bg-white rounded-2xl shadow overflow-x-auto border border-gray-200">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-darkblue text-white text-xs uppercase tracking-wider">
+                                    <th class="p-4">Date & Time</th>
+                                    <th class="p-4">Task / Visit Title</th>
+                                    <th class="p-4">Client / Property</th>
+                                    <th class="p-4">Status</th>
+                                    <th class="p-4 text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-schedule-tbody" class="divide-y divide-gray-200 text-sm">
+                                <!-- Populated via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-darkblue text-white border-t border-accentgold/30 mt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="w-10 h-10 rounded-full bg-accentgold flex items-center justify-center text-darkblue font-bold text-xl font-heading">
+                            UP
+                        </div>
+                        <span class="text-lg font-bold font-heading">UNIQUE PROPERTIES</span>
+                    </div>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-4">Purchase, sale, rental, and marketing of commercial & residential plots, agricultural land, houses, flats, and shops in Nanded.</p>
+                    <p class="text-accentgold text-xs font-semibold">Prop. Syed Abubakar Noman</p>
+                </div>
+                <div>
+                    <h4 class="text-accentgold font-bold font-heading mb-4 uppercase text-sm tracking-wider">Quick Links</h4>
+                    <ul class="space-y-2 text-sm text-gray-300">
+                        <li><button onclick="switchTab('home')" class="hover:text-accentgold transition">Home</button></li>
+                        <li><button onclick="switchTab('about')" class="hover:text-accentgold transition">About Us</button></li>
+                        <li><button onclick="switchTab('services')" class="hover:text-accentgold transition">Our Services</button></li>
+                        <li><button onclick="switchTab('listings')" class="hover:text-accentgold transition">Property Listings</button></li>
+                        <li><button onclick="switchTab('contact')" class="hover:text-accentgold transition">Contact Page</button></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-accentgold font-bold font-heading mb-4 uppercase text-sm tracking-wider">Our Services</h4>
+                    <ul class="space-y-2 text-sm text-gray-300">
+                        <li>Residential & Commercial Plots</li>
+                        <li>Houses, Villas & Flats</li>
+                        <li>Agricultural Land</li>
+                        <li>Commercial Shops</li>
+                        <li>Property Marketing & Legal Aid</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-accentgold font-bold font-heading mb-4 uppercase text-sm tracking-wider">Contact Info</h4>
+                    <p class="text-sm text-gray-300 mb-2"><i class="fas fa-map-marker-alt text-accentgold mr-2"></i> Degloor Naka, Nanded, Maharashtra – 431604</p>
+                    <p class="text-sm text-gray-300 mb-2"><i class="fas fa-phone-alt text-accentgold mr-2"></i> +91 7776000339 / 9011146695</p>
+                    <p class="text-sm text-gray-300 mb-4"><i class="fab fa-instagram text-accentgold mr-2"></i> unique_properties_nanded</p>
+                    <a href="https://wa.me/917776000339" target="_blank" class="inline-block bg-green-600 text-white px-4 py-2 rounded-lg font-bold text-xs hover:bg-green-700 transition">
+                        <i class="fab fa-whatsapp mr-1"></i> WhatsApp Support
+                    </a>
+                </div>
+            </div>
+            <div class="border-t border-white/10 pt-8 flex flex-col sm:flex-row justify-between items-center text-xs text-gray-400">
+                <p>&copy; 2026 UNIQUE PROPERTIES – Purchase & Sale. All Rights Reserved.</p>
+                <p class="mt-2 sm:mt-0">Designed for Prop. Syed Abubakar Noman | Nanded, Maharashtra</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ================= MODALS (ADMIN FORMS) ================= -->
+
+    <!-- Admin Login Modal -->
+    <div id="admin-login-modal" class="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4 hidden">
+        <div class="bg-darkblue text-white p-8 rounded-3xl max-w-md w-full border border-accentgold/30 shadow-2xl relative">
+            <button onclick="closeAdminLogin()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-xl"><i class="fas fa-times"></i></button>
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-accentgold text-darkblue rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-3 font-heading">
+                    <i class="fas fa-lock"></i>
+                </div>
+                <h3 class="text-2xl font-bold font-heading">Admin CRM Login</h3>
+                <p class="text-xs text-accentgold mt-1">Unique Properties Secure Access</p>
+            </div>
+            <form onsubmit="handleAdminLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs uppercase font-bold text-accentgold mb-1">Admin Passcode</label>
+                    <input type="password" id="admin-passcode-input" required placeholder="Enter passcode (default: admin123)" class="w-full bg-navy border border-white/20 rounded-xl p-3 text-sm text-white focus:ring-2 focus:ring-accentgold">
+                </div>
+                <button type="submit" class="w-full bg-accentgold text-darkblue font-bold py-3 rounded-xl hover:bg-goldhover transition shadow">
+                    Login to CRM
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Property Add/Edit Modal -->
+    <div id="property-modal" class="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4 hidden overflow-y-auto">
+        <div class="bg-white text-darkblue p-8 rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl relative">
+            <button onclick="closePropertyModal()" class="absolute top-4 right-4 text-gray-400 hover:text-darkblue text-xl"><i class="fas fa-times"></i></button>
+            <h3 id="property-modal-title" class="text-2xl font-bold font-heading mb-6 text-darkblue">Add New Property</h3>
+            <form id="property-form" onsubmit="savePropertyData(event)" class="space-y-4">
+                <input type="hidden" id="prop-edit-index">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs uppercase font-bold text-gray-600 mb-1">Property Name</label>
+                        <input type="text" id="prop-name" required placeholder="e.g. Sona Dream Villa / Plot" class="w-full bg-lightgrey border border-gray-300 rounded-xl p-3 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase font-bold text-gray-600 mb-1">Plotting / Society Name</label>
+                        <input type="text" id="prop-society" placeholder="e.g. Sona Dream Layout" class="w-full bg-lightgrey border border-gray-300 rounded-xl p-3 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase font-bold text-gray-600 mb-1">Location</label>
+                        <input type="text" id="prop-location" required placeholder="e.g. Degloor Naka, Nanded" class="w-full bg-lightgrey border border-gray-300 rounded-xl p-3 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase font-bold text-gray-600 mb-1">Plot / House Number</label>
+                        <input type="text" id="prop-number" placeholder="e.g. Plot No. 42" class="w-full bg-lightgrey border border-gray-300 rounded-xl p-3 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase font-bold text-gray-600 mb-1">Property Type</label>
+                        <select id="prop-type" class="w-full bg-lightgrey border border-gray-300 rounded-xl p-3 text-sm">
+                            <option value="Residential Plot">Residential Plot</option>
+                            <option value="Commercial Plot">Commercial Plot</option>
+                            <option value="House / Villa">House / Villa</option>
+                            <option value="Flat / Apartment">Flat / Apartment</option>
+                            <option value="Agricultural Land">Agricultural Land</option>
+                            <option value="Shop / Commercial">Shop / Commercial</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase font-bold text-gray-600 mb-1">Area (sq.ft)</label>
+                        <input type="text" id="prop-area" placeholder="e.g. 1500 sq.ft" class="w-full bg-lightgrey border border-gray-300 rounded-xl p-3 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase font-bold text-gray-600 mb-1">Total Amount (₹)</label>
+                        <input type="number" id="prop-price" required placeholder="e.g. 2500000" class="w-full bg-lightgrey border border-gray-300 rounded-xl p-3 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase font-bold text-gray-600 mb-1">Status</label>
+                        <select id="prop-status" class="w-full bg-lightgrey border border-gray-300 rounded-xl p-3 text-sm">
+                            <option value="Available">Available</option>
+                            <option value="Reserved">Reserved</option>
+                            <option value="Sold">Sold</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase font-bold text-gray-600 mb-1">Owner Name</label>
+                        <input type="text" id="prop-owner" placeholder="Owner Name" class="w-full bg-lightgrey border border-gray-300 rounded-xl p-3 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase font-bold text-gray-600 mb-1">Owner Contact</label>
+                        <input type="text" id="prop-owner-contact" placeholder="Owner Phone" class="w-full bg-lightgrey border border-gray-300 rounded-xl p-3 text-sm">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs uppercase font-bold text-gray-600 mb-1">Property Image URL</label>
+                    <input type="url" id="prop-image" placeholder="Paste image URL (Unsplash or direct link)" class="w-full bg-lightgrey border border-gray-300 rounded-xl p-3 text-sm">
+                </div>
+                <div class="flex justify-end space-x-4 pt-4">
+                    <button type="button" onclick="closePropertyModal()" class="px-6 py-2.5 rounded-xl font-bold bg-gray-200 text-gray-700">Cancel</button>
+                    <button type="submit" class="px-8 py-2.5 rounded-xl font-bold bg-accentgold text-darkblue hover:bg-goldhover">Save Property</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Client Add/Edit Modal -->
+    <div id="client-modal" class="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4 hidden overflow-y-auto">
+        <div class="bg-white text-darkblue p-8 rounded-3xl max-w-xl w-full shadow-2xl relative">
+            <button onclick="closeClientModal()" class="absolute top-4 right-4 text-gray-400 hover:text-darkblue text-xl"><i class="fas fa-times"></i></button>
+            <h3 id="client-modal-title" class="text-2xl font-bold font-heading mb-6 text-darkblue">Add Client Lead</h3>
+            <form id="client-form" onsubmit="saveClientData(event)" class="space-y-4">
+                <input type="hidden" id="client-edit-index">
+                <div>
+                    <label class="block text-xs uppercase font-bold text-gray-600 mb-1">Client Name</label>
+                    <input type="text" id="client-name" required placeholder="Full Name" class="w-full bg-lightgrey border border-gray-300 rounded-xl p-3 text-sm">
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs uppercase font-bold text-gray-600 mb-1">Contact Number</label>
+                        <input type="tel" id="client-contact" required placeholder="Mobile Number" class="w-full bg-lightgrey border border-gray-300 rounded-xl p-3 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase font-bold text-gray-600 mb-1">Requirement</label>
+                        <input type="text" id="client-requirement" placeholder="e.g. 2000 sq.ft Plot" class="w-full bg-lightgrey border border-gray-300 rounded-xl p-3 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase font-bold text-gray-600 mb-1">Budget (₹)</label>
+                        <input type="number" id="client-budget" placeholder="Budget Amount" class="w-full bg-lightgrey border border-gray-300 rounded-xl p-3 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase font-bold text-gray-600 mb-1">Preferred Area</label>
+                        <input type="text" id="client-area" placeholder="e.g. Degloor Naka" class="w-full bg-lightgrey border border-gray-300 rounded-xl p-3 text-sm">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs uppercase font-bold text-gray-600 mb-1">Follow-up Date</label>
+                    <input type="date" id="client-followup" class="w-full bg-lightgrey border border-gray-300 rounded-xl p-3 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs uppercase font-bold text-gray-600 mb-1">Notes</label>
+                    <textarea id="client-notes" rows="3" placeholder="Additional client remarks..." class="w-full bg-lightgrey border border-gray-300 rounded-xl p-3 text-sm"></textarea>
+                </div>
+                <div class="flex justify-end space-x-4 pt-4">
+                    <button type="button" onclick="closeClientModal()" class="px-6 py-2.5 rounded-xl font-bold bg-gray-200 text-gray-700">Cancel</button>
+                    <button type="submit" class="px-8 py-2.5 rounded-xl font-bold bg-accentgold text-darkblue hover:bg-goldhover">Save Client</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Payment Add/Edit Modal -->
+    <div id="payment-modal" class="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4 hidden overflow-y-auto">
+        <div class="bg-white text-darkblue p-8 rounded-3xl max-w-xl w-full shadow-2xl relative">
+            <button onclick="closePaymentModal()" class="absolute top-4 right-4 text-gray-400 hover:text-darkblue text-xl"><i class="fas fa-times"></i></button>
+            <h3 id="payment-modal-title" class="text-2xl font-bold font-heading mb-6 text-darkblue">Add Payment Entry</h3>
+            <form id="payment-form" onsubmit="savePaymentData(event)" class="space-y-4">
+                <input type="hidden" id="payment-edit-index">
+                <div>
+                    <label class="block text-xs uppercase font-bold text-gray-600 mb-1">Client / Property Reference</label>
+                    <input type="text" id="pay-client" required placeholder="e.g. Rajesh Kumar - Sona Dream Plot 12" class="w-full bg-lightgrey border border-gray-300 rounded-xl p-3 text-sm">
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs uppercase font-bold text-gray-600 mb-1">Total Amount (₹)</label>
+                        <input type="number" id="pay-total" required oninput="calculateRemaining()" placeholder="Total Cost" class="w-full bg-lightgrey border border-gray-300 rounded-xl p-3 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase font-bold text-gray-600 mb-1">Paid Amount (₹)</label>
+                        <input type="number" id="pay-paid" required oninput="calculateRemaining()" placeholder="Amount Paid" class="w-full bg-lightgrey border border-gray-300 rounded-xl p-3 text-sm">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs uppercase font-bold text-gray-600 mb-1">Remaining Balance (₹)</label>
+                    <input type="number" id="pay-remaining" readonly class="w-full bg-gray-200 border border-gray-300 rounded-xl p-3 text-sm font-bold text-red-600">
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs uppercase font-bold text-gray-600 mb-1">Payment Date</label>
+                        <input type="date" id="pay-date" class="w-full bg-lightgrey border border-gray-300 rounded-xl p-3 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase font-bold text-gray-600 mb-1">Next Due Date</label>
+                        <input type="date" id="pay-duedate" class="w-full bg-lightgrey border border-gray-300 rounded-xl p-3 text-sm">
+                    </div>
+                </div>
+                <div class="flex justify-end space-x-4 pt-4">
+                    <button type="button" onclick="closePaymentModal()" class="px-6 py-2.5 rounded-xl font-bold bg-gray-200 text-gray-700">Cancel</button>
+                    <button type="submit" class="px-8 py-2.5 rounded-xl font-bold bg-accentgold text-darkblue hover:bg-goldhover">Save Payment</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Schedule Add/Edit Modal -->
+    <div id="schedule-modal" class="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4 hidden overflow-y-auto">
+        <div class="bg-white text-darkblue p-8 rounded-3xl max-w-xl w-full shadow-2xl relative">
+            <button onclick="closeScheduleModal()" class="absolute top-4 right-4 text-gray-400 hover:text-darkblue text-xl"><i class="fas fa-times"></i></button>
+            <h3 id="schedule-modal-title" class="text-2xl font-bold font-heading mb-6 text-darkblue">Add Daily Schedule / Task</h3>
+            <form id="schedule-form" onsubmit="saveScheduleData(event)" class="space-y-4">
+                <input type="hidden" id="schedule-edit-index">
+                <div>
+                    <label class="block text-xs uppercase font-bold text-gray-600 mb-1">Task / Visit Title</label>
+                    <input type="text" id="sch-title" required placeholder="e.g. Site Visit with Client at Degloor Naka" class="w-full bg-lightgrey border border-gray-300 rounded-xl p-3 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs uppercase font-bold text-gray-600 mb-1">Client / Property Reference</label>
+                    <input type="text" id="sch-ref" placeholder="Client Name or Property" class="w-full bg-lightgrey border border-gray-300 rounded-xl p-3 text-sm">
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs uppercase font-bold text-gray-600 mb-1">Date & Time</label>
+                        <input type="datetime-local" id="sch-datetime" required class="w-full bg-lightgrey border border-gray-300 rounded-xl p-3 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase font-bold text-gray-600 mb-1">Status</label>
+                        <select id="sch-status" class="w-full bg-lightgrey border border-gray-300 rounded-xl p-3 text-sm">
+                            <option value="Pending">Pending</option>
+                            <option value="Completed">Completed</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex justify-end space-x-4 pt-4">
+                    <button type="button" onclick="closeScheduleModal()" class="px-6 py-2.5 rounded-xl font-bold bg-gray-200 text-gray-700">Cancel</button>
+                    <button type="submit" class="px-8 py-2.5 rounded-xl font-bold bg-accentgold text-darkblue hover:bg-goldhover">Save Schedule</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Sold Property Modal -->
+    <div id="sold-modal" class="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4 hidden overflow-y-auto">
+        <div class="bg-white text-darkblue p-8 rounded-3xl max-w-xl w-full shadow-2xl relative">
+            <button onclick="closeSoldModal()" class="absolute top-4 right-4 text-gray-400 hover:text-darkblue text-xl"><i class="fas fa-times"></i></button>
+            <h3 id="sold-modal-title" class="text-2xl font-bold font-heading mb-6 text-darkblue">Record Sold Property</h3>
+            <form id="sold-form" onsubmit="saveSoldData(event)" class="space-y-4">
+                <input type="hidden" id="sold-edit-index">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs uppercase font-bold text-gray-600 mb-1">Property Name</label>
+                        <input type="text" id="sold-name" required placeholder="Property Name" class="w-full bg-lightgrey border border-gray-300 rounded-xl p-3 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase font-bold text-gray-600 mb-1">Location / Plot No.</label>
+                        <input type="text" id="sold-location" required placeholder="Location & Plot No." class="w-full bg-lightgrey border border-gray-300 rounded-xl p-3 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase font-bold text-gray-600 mb-1">Area</label>
+                        <input type="text" id="sold-area" placeholder="e.g. 1500 sq.ft" class="w-full bg-lightgrey border border-gray-300 rounded-xl p-3 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase font-bold text-gray-600 mb-1">Sold Price (₹)</label>
+                        <input type="number" id="sold-price" required placeholder="Sold Price" class="w-full bg-lightgrey border border-gray-300 rounded-xl p-3 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase font-bold text-gray-600 mb-1">Buyer Name</label>
+                        <input type="text" id="sold-buyer" required placeholder="Buyer Full Name" class="w-full bg-lightgrey border border-gray-300 rounded-xl p-3 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase font-bold text-gray-600 mb-1">Buyer Contact</label>
+                        <input type="tel" id="sold-buyer-contact" required placeholder="Buyer Phone" class="w-full bg-lightgrey border border-gray-300 rounded-xl p-3 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase font-bold text-gray-600 mb-1">Registry Date</label>
+                        <input type="date" id="sold-registry" class="w-full bg-lightgrey border border-gray-300 rounded-xl p-3 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase font-bold text-gray-600 mb-1">Payment Status</label>
+                        <select id="sold-payment-status" class="w-full bg-lightgrey border border-gray-300 rounded-xl p-3 text-sm">
+                            <option value="Paid Full">Paid Full</option>
+                            <option value="Part Payment">Part Payment</option>
+                            <option value="Pending">Pending</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex justify-end space-x-4 pt-4">
+                    <button type="button" onclick="closeSoldModal()" class="px-6 py-2.5 rounded-xl font-bold bg-gray-200 text-gray-700">Cancel</button>
+                    <button type="submit" class="px-8 py-2.5 rounded-xl font-bold bg-accentgold text-darkblue hover:bg-goldhover">Save Record</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- ================= JAVASCRIPT LOGIC ================= -->
+    <script>
+        // --- INITIAL DATA & LOCALSTORAGE ---
+        const DEFAULT_PROPERTIES = [
+            {
+                name: "Sona Dream Luxury Plot",
+                society: "Sona Dream Layout",
+                location: "Degloor Naka, Nanded",
+                number: "Plot No. 12",
+                type: "Residential Plot",
+                area: "1,500 sq.ft",
+                price: 2250000,
+                owner: "Syed Abubakar Noman",
+                ownerContact: "7776000339",
+                status: "Available",
+                image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&q=80&w=800"
+            },
+            {
+                name: "Commercial Highway Plot",
+                society: "Nanded Commercial Hub",
+                location: "Airport Road, Nanded",
+                number: "Shop Plot 04",
+                type: "Commercial Plot",
+                area: "2,400 sq.ft",
+                price: 5500000,
+                owner: "Mohammed Ali",
+                ownerContact: "9011146695",
+                status: "Available",
+                image: "https://images.unsplash.com/photo-1577495508048-b635879837f1?auto=format&fit=crop&q=80&w=800"
+            },
+            {
+                name: "Modern 3BHK Duplex Villa",
+                society: "Unique Residency",
+                location: "Taroda, Nanded",
+                number: "Villa No. 07",
+                type: "House / Villa",
+                area: "2,100 sq.ft",
+                price: 6800000,
+                owner: "Shaikh Rahim",
+                ownerContact: "9822011223",
+                status: "Available",
+                image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=800"
+            }
+        ];
+
+        const DEFAULT_SOLD = [
+            {
+                name: "CIDCO Residential Plot",
+                location: "CIDCO Nanded (Plot 88)",
+                area: "1,200 sq.ft",
+                price: 1800000,
+                buyer: "Santosh Kulkarni",
+                buyerContact: "9422155678",
+                registryDate: "2026-02-15",
+                paymentStatus: "Paid Full"
+            }
+        ];
+
+        const DEFAULT_CLIENTS = [
+            {
+                name: "Vijay Deshmukh",
+                contact: "9850123456",
+                requirement: "Residential Plot",
+                budget: 2500000,
+                area: "Degloor Naka",
+                followup: "2026-10-05",
+                notes: "Looking for clear title plot near main road."
+            }
+        ];
+
+        const DEFAULT_PAYMENTS = [
+            {
+                client: "Santosh Kulkarni - CIDCO Plot 88",
+                total: 1800000,
+                paid: 1800000,
+                remaining: 0,
+                date: "2026-02-15",
+                dueDate: "2026-02-15"
+            }
+        ];
+
+        const DEFAULT_SCHEDULE = [
+            {
+                title: "Site Visit with Vijay Deshmukh",
+                ref: "Degloor Naka Plots",
+                datetime: "2026-10-05T11:00",
+                status: "Pending"
+            }
+        ];
+
+        // Load from localStorage or initialize
+        let properties = JSON.parse(localStorage.getItem('up_properties')) || DEFAULT_PROPERTIES;
+        let soldProperties = JSON.parse(localStorage.getItem('up_sold')) || DEFAULT_SOLD;
+        let clients = JSON.parse(localStorage.getItem('up_clients')) || DEFAULT_CLIENTS;
+        let payments = JSON.parse(localStorage.getItem('up_payments')) || DEFAULT_PAYMENTS;
+        let schedule = JSON.parse(localStorage.getItem('up_schedule')) || DEFAULT_SCHEDULE;
+
+        function saveData() {
+            localStorage.setItem('up_properties', JSON.stringify(properties));
+            localStorage.setItem('up_sold', JSON.stringify(soldProperties));
+            localStorage.setItem('up_clients', JSON.stringify(clients));
+            localStorage.setItem('up_payments', JSON.stringify(payments));
+            localStorage.setItem('up_schedule', JSON.stringify(schedule));
+        }
+
+        // --- NAVIGATION & TABS ---
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById('tab-' + tabId).classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            if(tabId === 'listings') {
+                renderPublicListings();
+            }
+        }
+
+        function setListingSubTab(sub) {
+            const availBtn = document.getElementById('subtab-avail-btn');
+            const soldBtn = document.getElementById('subtab-sold-btn');
+            if(sub === 'available') {
+                availBtn.className = "px-6 py-2 rounded-lg font-bold text-sm bg-darkblue text-accentgold shadow transition";
+                soldBtn.className = "px-6 py-2 rounded-lg font-bold text-sm text-gray-700 hover:text-darkblue transition";
+            } else {
+                soldBtn.className = "px-6 py-2 rounded-lg font-bold text-sm bg-darkblue text-accentgold shadow transition";
+                availBtn.className = "px-6 py-2 rounded-lg font-bold text-sm text-gray-700 hover:text-darkblue transition";
+            }
+            renderPublicListings(sub);
+        }
+
+        function setAdminSubTab(subId) {
+            document.querySelectorAll('.admin-pane').forEach(el => el.classList.add('hidden'));
+            document.getElementById('admin-pane-' + subId).classList.remove('hidden');
+            document.querySelectorAll('.admin-nav-btn').forEach(btn => {
+                btn.className = "admin-nav-btn px-4 py-2 rounded-lg text-sm font-bold text-gray-300 hover:text-white whitespace-nowrap";
+            });
+            document.getElementById('admintab-' + subId + '-btn').className = "admin-nav-btn px-4 py-2 rounded-lg text-sm font-bold bg-accentgold text-darkblue whitespace-nowrap";
+            renderAdminData();
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // --- ADMIN AUTHENTICATION ---
+        let isAdminLoggedIn = false;
+
+        function openAdminLogin() {
+            if(isAdminLoggedIn) {
+                switchTab('admin');
+            } else {
+                document.getElementById('admin-login-modal').classList.remove('hidden');
+            }
+        }
+
+        function closeAdminLogin() {
+            document.getElementById('admin-login-modal').classList.add('hidden');
+        }
+
+        function handleAdminLogin(e) {
+            e.preventDefault();
+            const pass = document.getElementById('admin-passcode-input').value;
+            if(pass === 'admin123' || pass === '7776') {
+                isAdminLoggedIn = true;
+                closeAdminLogin();
+                switchTab('admin');
+                setAdminSubTab('dashboard');
+                alert('Welcome to Unique Properties CRM Admin Panel!');
+            } else {
+                alert('Incorrect passcode! Default passcode is admin123');
+            }
+        }
+
+        function checkAdminAccess() {
+            if(isAdminLoggedIn) {
+                switchTab('admin');
+            } else {
+                openAdminLogin();
+            }
+        }
+
+        function logoutAdmin() {
+            isAdminLoggedIn = false;
+            switchTab('home');
+            alert('Logged out from CRM successfully.');
+        }
+
+        // --- RENDER FRONTEND DYNAMIC DATA ---
+        function renderHomeFeatured() {
+            const grid = document.getElementById('home-featured-grid');
+            if(!grid) return;
+            const featured = properties.slice(0, 3);
+            if(featured.length === 0) {
+                grid.innerHTML = `<p class="col-span-3 text-center text-gray-500 py-8">No properties listed yet.</p>`;
+                return;
+            }
+            grid.innerHTML = featured.map(p => `
+                <div class="bg-white rounded-2xl overflow-hidden shadow-lg border border-gray-100 hover:shadow-2xl transition flex flex-col justify-between">
+                    <div>
+                        <div class="relative h-56 overflow-hidden">
+                            <img src="${p.image || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&q=80&w=800'}" alt="${p.name}" class="w-full h-full object-cover hover:scale-105 transition duration-500">
+                            <span class="absolute top-3 left-3 bg-darkblue text-accentgold px-3 py-1 rounded-full text-xs font-bold uppercase shadow">${p.type}</span>
+                            <span class="absolute top-3 right-3 bg-green-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow">${p.status}</span>
+                        </div>
+                        <div class="p-6">
+                            <p class="text-xs text-accentgold font-bold uppercase mb-1">${p.society || 'Unique Properties'}</p>
+                            <h3 class="text-xl font-bold font-heading text-darkblue mb-2">${p.name}</h3>
+                            <p class="text-gray-500 text-sm mb-4"><i class="fas fa-map-marker-alt text-accentgold mr-1"></i> ${p.location}</p>
+                            <div class="flex justify-between items-center text-sm border-t border-gray-100 pt-4">
+                                <span class="text-gray-600 font-medium">Area: <strong class="text-darkblue">${p.area}</strong></span>
+                                <span class="text-xl font-bold font-heading text-darkblue">₹${Number(p.price).toLocaleString('en-IN')}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6 pt-0">
+                        <a href="https://wa.me/917776000339?text=Hello,%20I%20am%20interested%20in%20property:%20${encodeURIComponent(p.name)}%20at%20${encodeURIComponent(p.location)}" target="_blank" class="w-full bg-darkblue text-accentgold font-bold py-3 rounded-xl hover:bg-navy transition text-center block shadow">
+                            <i class="fab fa-whatsapp mr-2"></i> Inquire via WhatsApp
+                        </a>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderPublicListings(subType = 'available') {
+            const container = document.getElementById('public-listings-container');
+            const searchVal = document.getElementById('listing-filter-input').value.toLowerCase();
+            const typeVal = document.getElementById('listing-type-filter').value;
+            
+            if(subType === 'available') {
+                let filtered = properties.filter(p => {
+                    const matchText = (p.name + ' ' + p.location + ' ' + p.society + ' ' + (p.number||'')).toLowerCase().includes(searchVal);
+                    const matchType = typeVal === '' || p.type === typeVal;
+                    return matchText && matchType;
+                });
+
+                if(filtered.length === 0) {
+                    container.innerHTML = `<p class="col-span-3 text-center text-gray-500 py-12">No available properties matching your criteria.</p>`;
+                    return;
+                }
+
+                container.innerHTML = filtered.map(p => `
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-lg border border-gray-100 hover:shadow-2xl transition flex flex-col justify-between">
+                        <div>
+                            <div class="relative h-56 overflow-hidden">
+                                <img src="${p.image || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&q=80&w=800'}" alt="${p.name}" class="w-full h-full object-cover">
+                                <span class="absolute top-3 left-3 bg-darkblue text-accentgold px-3 py-1 rounded-full text-xs font-bold uppercase shadow">${p.type}</span>
+                                <span class="absolute top-3 right-3 bg-green-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow">${p.status}</span>
+                            </div>
+                            <div class="p-6">
+                                <p class="text-xs text-accentgold font-bold uppercase mb-1">${p.society || 'Unique Properties'}</p>
+                                <h3 class="text-xl font-bold font-heading text-darkblue mb-2">${p.name}</h3>
+                                <p class="text-gray-500 text-sm mb-2"><i class="fas fa-map-marker-alt text-accentgold mr-1"></i> ${p.location} (${p.number || ''})</p>
+                                <div class="flex justify-between items-center text-sm border-t border-gray-100 pt-4 mt-4">
+                                    <span class="text-gray-600 font-medium">Area: <strong class="text-darkblue">${p.area}</strong></span>
+                                    <span class="text-xl font-bold font-heading text-darkblue">₹${Number(p.price).toLocaleString('en-IN')}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-6 pt-0 flex gap-2">
+                            <a href="https://wa.me/917776000339?text=Hello,%20I%20want%20to%20buy:%20${encodeURIComponent(p.name)}%20at%20${encodeURIComponent(p.location)}" target="_blank" class="flex-1 bg-green-600 text-white font-bold py-3 rounded-xl hover:bg-green-700 transition text-center text-sm shadow">
+                                <i class="fab fa-whatsapp mr-1"></i> WhatsApp
+                            </a>
+                            <a href="tel:7776000339" class="bg-darkblue text-accentgold px-4 py-3 rounded-xl font-bold hover:bg-navy transition text-center shadow">
+                                <i class="fas fa-phone-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                let filteredSold = soldProperties.filter(s => {
+                    return (s.name + ' ' + s.location + ' ' + s.buyer).toLowerCase().includes(searchVal);
+                });
+
+                if(filteredSold.length === 0) {
+                    container.innerHTML = `<p class="col-span-3 text-center text-gray-500 py-12">No sold properties records found.</p>`;
+                    return;
+                }
+
+                container.innerHTML = filteredSold.map(s => `
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-lg border border-gray-100 p-6 flex flex-col justify-between">
+                        <div>
+                            <span class="bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-bold uppercase">Sold Property</span>
+                            <h3 class="text-xl font-bold font-heading text-darkblue mt-3 mb-2">${s.name}</h3>
+                            <p class="text-gray-500 text-sm mb-4"><i class="fas fa-map-marker-alt text-accentgold mr-1"></i> ${s.location}</p>
+                            <div class="space-y-2 text-sm border-t border-gray-100 pt-4 mb-4">
+                                <p class="flex justify-between"><span class="text-gray-500">Area:</span> <span class="font-bold text-darkblue">${s.area}</span></p>
+                                <p class="flex justify-between"><span class="text-gray-500">Sold Price:</span> <span class="font-bold text-green-600">₹${Number(s.price).toLocaleString('en-IN')}</span></p>
+                                <p class="flex justify-between"><span class="text-gray-500">Buyer Name:</span> <span class="font-bold text-darkblue">${s.buyer}</span></p>
+                                <p class="flex justify-between"><span class="text-gray-500">Registry Date:</span> <span class="font-bold text-darkblue">${s.registryDate}</span></p>
+                            </div>
+                        </div>
+                        <span class="bg-green-50 text-green-700 text-center py-2 rounded-xl text-xs font-bold border border-green-200">Status: ${s.paymentStatus}</span>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // --- RENDER ADMIN CRM DATA ---
+        function renderAdminData() {
+            // Stats
+            document.getElementById('stat-avail-count').innerText = properties.length;
+            document.getElementById('stat-sold-count').innerText = soldProperties.length;
+            document.getElementById('stat-client-count').innerText = clients.length;
+            
+            const totalRevenue = soldProperties.reduce((sum, s) => sum + Number(s.price), 0);
+            document.getElementById('stat-revenue').innerText = '₹' + totalRevenue.toLocaleString('en-IN');
+
+            // Dashboard Schedule List
+            const dashSch = document.getElementById('admin-dash-schedule-list');
+            dashSch.innerHTML = schedule.map(sch => `
+                <div class="flex items-center justify-between p-3 bg-lightgrey rounded-xl border border-gray-200">
+                    <div>
+                        <h4 class="font-bold text-sm text-darkblue">${sch.title}</h4>
+                        <p class="text-xs text-gray-500"><i class="fas fa-calendar mr-1"></i> ${sch.datetime} | ${sch.ref || ''}</p>
+                    </div>
+                    <span class="px-2.5 py-1 rounded text-xs font-bold ${sch.status === 'Completed' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-800'}">${sch.status}</span>
+                </div>
+            `).join('') || '<p class="text-sm text-gray-500">No scheduled tasks.</p>';
+
+            // Available Table
+            const availTbody = document.getElementById('admin-available-tbody');
+            availTbody.innerHTML = properties.map((p, idx) => `
+                <tr class="hover:bg-lightgrey/50">
+                    <td class="p-4"><img src="${p.image || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&q=80&w=200'}" class="w-12 h-12 rounded-lg object-cover shadow"></td>
+                    <td class="p-4 font-bold text-darkblue">${p.name}<br><span class="text-xs text-gray-500 font-normal">${p.society || ''}</span></td>
+                    <td class="p-4 text-gray-600">${p.location}<br><span class="text-xs text-accentgold font-semibold">${p.number || ''}</span></td>
+                    <td class="p-4 text-gray-600">${p.type}<br><span class="text-xs font-semibold">${p.area}</span></td>
+                    <td class="p-4 font-bold text-darkblue">₹${Number(p.price).toLocaleString('en-IN')}</td>
+                    <td class="p-4 text-gray-600">${p.owner || '-'}<br><span class="text-xs text-gray-400">${p.ownerContact || ''}</span></td>
+                    <td class="p-4"><span class="px-2.5 py-1 rounded text-xs font-bold ${p.status === 'Available' ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700'}">${p.status}</span></td>
+                    <td class="p-4 text-center space-x-2">
+                        <button onclick="editProperty(${idx})" class="text-blue-600 hover:text-blue-800"><i class="fas fa-edit"></i></button>
+                        <button onclick="deleteProperty(${idx})" class="text-red-600 hover:text-red-800"><i class="fas fa-trash-alt"></i></button>
+                    </td>
+                </tr>
+            `).join('') || `<tr><td colspan="8" class="p-4 text-center text-gray-500">No properties available.</td></tr>`;
+
+            // Sold Table
+            const soldTbody = document.getElementById('admin-sold-tbody');
+            soldTbody.innerHTML = soldProperties.map((s, idx) => `
+                <tr class="hover:bg-lightgrey/50">
+                    <td class="p-4 font-bold text-darkblue">${s.name}</td>
+                    <td class="p-4 text-gray-600">${s.location}</td>
+                    <td class="p-4 text-gray-600">${s.area}</td>
+                    <td class="p-4 font-bold text-green-600">₹${Number(s.price).toLocaleString('en-IN')}</td>
+                    <td class="p-4 text-gray-600">${s.buyer}<br><span class="text-xs text-gray-400">${s.buyerContact}</span></td>
+                    <td class="p-4 text-gray-600">${s.registryDate}</td>
+                    <td class="p-4"><span class="px-2.5 py-1 rounded text-xs font-bold bg-green-100 text-green-700">${s.paymentStatus}</span></td>
+                    <td class="p-4 text-center space-x-2">
+                        <button onclick="editSold(${idx})" class="text-blue-600 hover:text-blue-800"><i class="fas fa-edit"></i></button>
+                        <button onclick="deleteSold(${idx})" class="text-red-600 hover:text-red-800"><i class="fas fa-trash-alt"></i></button>
+                    </td>
+                </tr>
+            `).join('') || `<tr><td colspan="8" class="p-4 text-center text-gray-500">No sold records.</td></tr>`;
+
+            // Clients Table
+            const clientsTbody = document.getElementById('admin-clients-tbody');
+            clientsTbody.innerHTML = clients.map((c, idx) => `
+                <tr class="hover:bg-lightgrey/50">
+                    <td class="p-4 font-bold text-darkblue">${c.name}</td>
+                    <td class="p-4 text-gray-600"><a href="tel:${c.contact}" class="text-blue-600 font-semibold hover:underline">${c.contact}</a></td>
+                    <td class="p-4 text-gray-600">${c.requirement}</td>
+                    <td class="p-4 font-bold text-darkblue">₹${Number(c.budget || 0).toLocaleString('en-IN')}</td>
+                    <td class="p-4 text-gray-600">${c.area || '-'}</td>
+                    <td class="p-4 text-gray-600">${c.followup || '-'}</td>
+                    <td class="p-4 text-gray-600 text-xs">${c.notes || '-'}</td>
+                    <td class="p-4 text-center space-x-2">
+                        <button onclick="editClient(${idx})" class="text-blue-600 hover:text-blue-800"><i class="fas fa-edit"></i></button>
+                        <button onclick="deleteClient(${idx})" class="text-red-600 hover:text-red-800"><i class="fas fa-trash-alt"></i></button>
+                    </td>
+                </tr>
+            `).join('') || `<tr><td colspan="8" class="p-4 text-center text-gray-500">No client leads.</td></tr>`;
+
+            // Payments Table
+            const payTbody = document.getElementById('admin-payments-tbody');
+            payTbody.innerHTML = payments.map((p, idx) => `
+                <tr class="hover:bg-lightgrey/50">
+                    <td class="p-4 font-bold text-darkblue">${p.client}</td>
+                    <td class="p-4 text-gray-600">₹${Number(p.total).toLocaleString('en-IN')}</td>
+                    <td class="p-4 font-bold text-green-600">₹${Number(p.paid).toLocaleString('en-IN')}</td>
+                    <td class="p-4 font-bold text-red-600">₹${Number(p.remaining).toLocaleString('en-IN')}</td>
+                    <td class="p-4 text-gray-600">${p.date || '-'}</td>
+                    <td class="p-4 text-gray-600">${p.dueDate || '-'}</td>
+                    <td class="p-4 text-center space-x-2">
+                        <button onclick="editPayment(${idx})" class="text-blue-600 hover:text-blue-800"><i class="fas fa-edit"></i></button>
+                        <button onclick="deletePayment(${idx})" class="text-red-600 hover:text-red-800"><i class="fas fa-trash-alt"></i></button>
+                    </td>
+                </tr>
+            `).join('') || `<tr><td colspan="7" class="p-4 text-center text-gray-500">No payment entries.</td></tr>`;
+
+            // Schedule Table
+            const schTbody = document.getElementById('admin-schedule-tbody');
+            schTbody.innerHTML = schedule.map((sch, idx) => `
+                <tr class="hover:bg-lightgrey/50">
+                    <td class="p-4 font-bold text-darkblue">${sch.datetime}</td>
+                    <td class="p-4 text-gray-800 font-semibold">${sch.title}</td>
+                    <td class="p-4 text-gray-600">${sch.ref || '-'}</td>
+                    <td class="p-4"><span class="px-2.5 py-1 rounded text-xs font-bold ${sch.status === 'Completed' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-800'}">${sch.status}</span></td>
+                    <td class="p-4 text-center space-x-2">
+                        <button onclick="editSchedule(${idx})" class="text-blue-600 hover:text-blue-800"><i class="fas fa-edit"></i></button>
+                        <button onclick="deleteSchedule(${idx})" class="text-red-600 hover:text-red-800"><i class="fas fa-trash-alt"></i></button>
+                    </td>
+                </tr>
+            `).join('') || `<tr><td colspan="5" class="p-4 text-center text-gray-500">No schedules recorded.</td></tr>`;
+        }
+
+        // --- MODAL CONTROLLERS & CRUD FUNCTIONS ---
+        // Properties
+        function openPropertyModal(isEdit = false) {
+            document.getElementById('property-modal').classList.remove('hidden');
+            if(!isEdit) {
+                document.getElementById('property-modal-title').innerText = "Add New Property";
+                document.getElementById('property-form').reset();
+                document.getElementById('prop-edit-index').value = "";
+            }
+        }
+        function closePropertyModal() { document.getElementById('property-modal').classList.add('hidden'); }
+
+        function savePropertyData(e) {
+            e.preventDefault();
+            const idx = document.getElementById('prop-edit-index').value;
+            const item = {
+                name: document.getElementById('prop-name').value,
+                society: document.getElementById('prop-society').value,
+                location: document.getElementById('prop-location').value,
+                number: document.getElementById('prop-number').value,
+                type: document.getElementById('prop-type').value,
+                area: document.getElementById('prop-area').value,
+                price: document.getElementById('prop-price').value,
+                owner: document.getElementById('prop-owner').value,
+                ownerContact: document.getElementById('prop-owner-contact').value,
+                status: document.getElementById('prop-status').value,
+                image: document.getElementById('prop-image').value || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&q=80&w=800'
+            };
+            if(idx === "") {
+                properties.unshift(item);
+            } else {
+                properties[idx] = item;
+            }
+            saveData();
+            closePropertyModal();
+            renderAdminData();
+            renderHomeFeatured();
+            alert('Property saved successfully!');
+        }
+
+        function editProperty(idx) {
+            const p = properties[idx];
+            document.getElementById('prop-edit-index').value = idx;
+            document.getElementById('prop-name').value = p.name;
+            document.getElementById('prop-society').value = p.society || '';
+            document.getElementById('prop-location').value = p.location;
+            document.getElementById('prop-number').value = p.number || '';
+            document.getElementById('prop-type').value = p.type;
+            document.getElementById('prop-area').value = p.area;
+            document.getElementById('prop-price').value = p.price;
+            document.getElementById('prop-owner').value = p.owner || '';
+            document.getElementById('prop-owner-contact').value = p.ownerContact || '';
+            document.getElementById('prop-status').value = p.status;
+            document.getElementById('prop-image').value = p.image || '';
+            document.getElementById('property-modal-title').innerText = "Edit Property Details";
+            document.getElementById('property-modal').classList.remove('hidden');
+        }
+
+        function deleteProperty(idx) {
+            if(confirm('Are you sure you want to delete this property?')) {
+                properties.splice(idx, 1);
+                saveData();
+                renderAdminData();
+                renderHomeFeatured();
+            }
+        }
+
+        // Clients
+        function openClientModal() {
+            document.getElementById('client-modal').classList.remove('hidden');
+            document.getElementById('client-modal-title').innerText = "Add Client Lead";
+            document.getElementById('client-form').reset();
+            document.getElementById('client-edit-index').value = "";
+        }
+        function closeClientModal() { document.getElementById('client-modal').classList.add('hidden'); }
+
+        function saveClientData(e) {
+            e.preventDefault();
+            const idx = document.getElementById('client-edit-index').value;
+            const item = {
+                name: document.getElementById('client-name').value,
+                contact: document.getElementById('client-contact').value,
+                requirement: document.getElementById('client-requirement').value,
+                budget: document.getElementById('client-budget').value,
+                area: document.getElementById('client-area').value,
+                followup: document.getElementById('client-followup').value,
+                notes: document.getElementById('client-notes').value
+            };
+            if(idx === "") clients.unshift(item);
+            else clients[idx] = item;
+            saveData();
+            closeClientModal();
+            renderAdminData();
+            alert('Client saved successfully!');
+        }
+
+        function editClient(idx) {
+            const c = clients[idx];
+            document.getElementById('client-edit-index').value = idx;
+            document.getElementById('client-name').value = c.name;
+            document.getElementById('client-contact').value = c.contact;
+            document.getElementById('client-requirement').value = c.requirement;
+            document.getElementById('client-budget').value = c.budget;
+            document.getElementById('client-area').value = c.area;
+            document.getElementById('client-followup').value = c.followup;
+            document.getElementById('client-notes').value = c.notes;
+            document.getElementById('client-modal-title').innerText = "Edit Client Lead";
+            document.getElementById('client-modal').classList.remove('hidden');
+        }
+
+        function deleteClient(idx) {
+            if(confirm('Delete client record?')) {
+                clients.splice(idx, 1);
+                saveData();
+                renderAdminData();
+            }
+        }
+
+        // Payments
+        function openPaymentModal() {
+            document.getElementById('payment-modal').classList.remove('hidden');
+            document.getElementById('payment-modal-title').innerText = "Add Payment Entry";
+            document.getElementById('payment-form').reset();
+            document.getElementById('payment-edit-index').value = "";
+        }
+        function closePaymentModal() { document.getElementById('payment-modal').classList.add('hidden'); }
+
+        function calculateRemaining() {
+            const total = Number(document.getElementById('pay-total').value) || 0;
+            const paid = Number(document.getElementById('pay-paid').value) || 0;
+            document.getElementById('pay-remaining').value = total - paid;
+        }
+
+        function savePaymentData(e) {
+            e.preventDefault();
+            const idx = document.getElementById('payment-edit-index').value;
+            const total = Number(document.getElementById('pay-total').value);
+            const paid = Number(document.getElementById('pay-paid').value);
+            const item = {
+                client: document.getElementById('pay-client').value,
+                total: total,
+                paid: paid,
+                remaining: total - paid,
+                date: document.getElementById('pay-date').value,
+                dueDate: document.getElementById('pay-duedate').value
+            };
+            if(idx === "") payments.unshift(item);
+            else payments[idx] = item;
+            saveData();
+            closePaymentModal();
+            renderAdminData();
+            alert('Payment entry saved!');
+        }
+
+        function editPayment(idx) {
+            const p = payments[idx];
+            document.getElementById('payment-edit-index').value = idx;
+            document.getElementById('pay-client').value = p.client;
+            document.getElementById('pay-total').value = p.total;
+            document.getElementById('pay-paid').value = p.paid;
+            document.getElementById('pay-remaining').value = p.remaining;
+            document.getElementById('pay-date').value = p.date;
+            document.getElementById('pay-duedate').value = p.dueDate;
+            document.getElementById('payment-modal-title').innerText = "Edit Payment Entry";
+            document.getElementById('payment-modal').classList.remove('hidden');
+        }
+
+        function deletePayment(idx) {
+            if(confirm('Delete payment record?')) {
+                payments.splice(idx, 1);
+                saveData();
+                renderAdminData();
+            }
+        }
+
+        // Schedule
+        function openScheduleModal() {
+            document.getElementById('schedule-modal').classList.remove('hidden');
+            document.getElementById('schedule-modal-title').innerText = "Add Daily Schedule / Task";
+            document.getElementById('schedule-form').reset();
+            document.getElementById('schedule-edit-index').value = "";
+        }
+        function closeScheduleModal() { document.getElementById('schedule-modal').classList.add('hidden'); }
+
+        function saveScheduleData(e) {
+            e.preventDefault();
+            const idx = document.getElementById('schedule-edit-index').value;
+            const item = {
+                title: document.getElementById('sch-title').value,
+                ref: document.getElementById('sch-ref').value,
+                datetime: document.getElementById('sch-datetime').value,
+                status: document.getElementById('sch-status').value
+            };
+            if(idx === "") schedule.unshift(item);
+            else schedule[idx] = item;
+            saveData();
+            closeScheduleModal();
+            renderAdminData();
+            alert('Schedule task saved!');
+        }
+
+        function editSchedule(idx) {
+            const s = schedule[idx];
+            document.getElementById('schedule-edit-index').value = idx;
+            document.getElementById('sch-title').value = s.title;
+            document.getElementById('sch-ref').value = s.ref;
+            document.getElementById('sch-datetime').value = s.datetime;
+            document.getElementById('sch-status').value = s.status;
+            document.getElementById('schedule-modal-title').innerText = "Edit Schedule Task";
+            document.getElementById('schedule-modal').classList.remove('hidden');
+        }
+
+        function deleteSchedule(idx) {
+            if(confirm('Delete schedule task?')) {
+                schedule.splice(idx, 1);
+                saveData();
+                renderAdminData();
+            }
+        }
+
+        // Sold
+        function openSoldModal() {
+            document.getElementById('sold-modal').classList.remove('hidden');
+            document.getElementById('sold-modal-title').innerText = "Record Sold Property";
+            document.getElementById('sold-form').reset();
+            document.getElementById('sold-edit-index').value = "";
+        }
+        function closeSoldModal() { document.getElementById('sold-modal').classList.add('hidden'); }
+
+        function saveSoldData(e) {
+            e.preventDefault();
+            const idx = document.getElementById('sold-edit-index').value;
+            const item = {
+                name: document.getElementById('sold-name').value,
+                location: document.getElementById('sold-location').value,
+                area: document.getElementById('sold-area').value,
+                price: document.getElementById('sold-price').value,
+                buyer: document.getElementById('sold-buyer').value,
+                buyerContact: document.getElementById('sold-buyer-contact').value,
+                registryDate: document.getElementById('sold-registry').value,
+                paymentStatus: document.getElementById('sold-payment-status').value
+            };
+            if(idx === "") soldProperties.unshift(item);
+            else soldProperties[idx] = item;
+            saveData();
+            closeSoldModal();
+            renderAdminData();
+            alert('Sold property record saved!');
+        }
+
+        function editSold(idx) {
+            const s = soldProperties[idx];
+            document.getElementById('sold-edit-index').value = idx;
+            document.getElementById('sold-name').value = s.name;
+            document.getElementById('sold-location').value = s.location;
+            document.getElementById('sold-area').value = s.area;
+            document.getElementById('sold-price').value = s.price;
+            document.getElementById('sold-buyer').value = s.buyer;
+            document.getElementById('sold-buyer-contact').value = s.buyerContact;
+            document.getElementById('sold-registry').value = s.registryDate;
+            document.getElementById('sold-payment-status').value = s.paymentStatus;
+            document.getElementById('sold-modal-title').innerText = "Edit Sold Record";
+            document.getElementById('sold-modal').classList.remove('hidden');
+        }
+
+        function deleteSold(idx) {
+            if(confirm('Delete sold record?')) {
+                soldProperties.splice(idx, 1);
+                saveData();
+                renderAdminData();
+            }
+        }
+
+        // Customer Inquiry Notification handler
+        function handleCustomerInquiry(e) {
+            e.preventDefault();
+            const name = document.getElementById('inquiry-name').value;
+            const phone = document.getElementById('inquiry-phone').value;
+            const req = document.getElementById('inquiry-requirement').value;
+            const notes = document.getElementById('inquiry-notes').value;
+
+            // Automatically add as client lead in CRM
+            clients.unshift({
+                name: name,
+                contact: phone,
+                requirement: req,
+                budget: 0,
+                area: "Inquiry Form",
+                followup: new Date().toISOString().split('T')[0],
+                notes: notes || 'Website Inquiry'
+            });
+            saveData();
+
+            alert('Thank you ' + name + '! Your inquiry has been sent to Unique Properties. We will contact you shortly.');
+            e.target.reset();
+        }
+
+        // Export Table to Excel (.xls)
+        function exportTableToExcel(tableID, filename = '') {
+            let downloadLink;
+            let dataType = 'application/vnd.ms-excel';
+            let tableSelect = document.getElementById(tableID);
+            let tableHTML = tableSelect.outerHTML.replace(/<a\b[^>]*>(.*?)<\/a>/gi,""); // remove action buttons
+
+            filename = filename ? filename.toLowerCase() : 'excel_data.xls';
+            downloadLink = document.createElement("a");
+            document.body.appendChild(downloadLink);
+
+            if(navigator.msSaveOrOpenBlob){
+                let blob = new Blob(['\ufeff', tableHTML], { type: dataType });
+                navigator.msSaveOrOpenBlob(blob, filename);
+            } else {
+                downloadLink.href = 'data:' + dataType + ', ' + encodeURIComponent(tableHTML);
+                downloadLink.download = filename;
+                downloadLink.click();
+            }
+        }
+
+        // Backup / Restore JSON
+        function backupDatabase() {
+            const db = { properties, soldProperties, clients, payments, schedule };
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db, null, 2));
+            const dlAnchor = document.createElement('a');
+            dlAnchor.setAttribute("href", dataStr);
+            dlAnchor.setAttribute("download", "unique_properties_backup_" + new Date().toISOString().split('T')[0] + ".json");
+            document.body.appendChild(dlAnchor);
+            dlAnchor.click();
+            dlAnchor.remove();
+        }
+
+        function restoreDatabase(event) {
+            const file = event.target.files[0];
+            if(!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const db = JSON.parse(e.target.result);
+                    if(db.properties) properties = db.properties;
+                    if(db.soldProperties) soldProperties = db.soldProperties;
+                    if(db.clients) clients = db.clients;
+                    if(db.payments) payments = db.payments;
+                    if(db.schedule) schedule = db.schedule;
+                    saveData();
+                    renderHomeFeatured();
+                    renderAdminData();
+                    alert('Database restored successfully from backup file!');
+                } catch(err) {
+                    alert('Invalid backup JSON file!');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function filterListingsFromHome() {
+            const type = document.getElementById('search-type').value;
+            const loc = document.getElementById('search-location').value;
+            switchTab('listings');
+            document.getElementById('listing-type-filter').value = type;
+            document.getElementById('listing-filter-input').value = loc;
+            renderPublicListings();
+        }
+
+        // Initialize on Load
+        window.onload = function() {
+            renderHomeFeatured();
+            renderAdminData();
+        };
+    </script>
+</body>
+</html>
